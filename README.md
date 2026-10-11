@@ -6,6 +6,8 @@ are rendered on the server and cached, and a webhook refreshes them when you pub
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fkookee-dot-dev%2Fstarter-nextjs&env=KOOKEE_API_KEY&envDescription=A%20standard%20API%20key%20from%20your%20Kookee%20project%20(API%20keys%20%E2%86%92%20Create%20Key)&envLink=https%3A%2F%2Fkookee.dev%2Fhelp%2Fsdk-amp-integration%2Fstart-a-site-from-the-nextjs-starter&project-name=kookee-site&repository-name=kookee-site)
 
+**Live demo:** [kookee-nextjs.vercel.app](https://kookee-nextjs.vercel.app), with the content of Ledgerly, a made-up invoicing app.
+
 Built with Next.js 16 (App Router, Cache Components),
 [`@kookee/sdk`](https://www.npmjs.com/package/@kookee/sdk) and
 [`@kookee/react`](https://www.npmjs.com/package/@kookee/react). No Tailwind: one stylesheet,
