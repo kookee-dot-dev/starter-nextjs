@@ -117,11 +117,12 @@ from the next page served.
   tag, roadmap changes, a changed slug of an entry that another type links to, and the first save
   or a reset of the widget settings.
 
-The status page has a time window of its own: at most a minute, since it is read during an
-incident. Subscribe the same endpoint to `incident.created`, `incident.updated`, `monitor.down` and
-`monitor.up`, and the next visit after one of them gets the current status. A status you set by
+The status page has a time window of its own: it is refreshed every minute, since it is read
+during an incident. A visit after a quiet spell can still get a copy up to five minutes old while
+the new one is fetched. Subscribe the same endpoint to `incident.created`, `incident.updated`,
+`monitor.down` and `monitor.up`, and the next visit after one of them gets the current status. A status you set by
 hand, an edited or deleted incident, and a maintenance window that starts or ends send no event,
-so they show within the minute.
+so they show on the next refresh.
 
 ## API usage
 
