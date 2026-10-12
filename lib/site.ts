@@ -6,3 +6,4 @@ export const SITE_URL = (
 ).replace(/\/+$/, '');
 
 export const ROADMAP_ENABLED = process.env.KOOKEE_ROADMAP !== 'false';
+export const STATUS_ENABLED = process.env.KOOKEE_STATUS === 'true';

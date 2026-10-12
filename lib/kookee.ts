@@ -7,6 +7,8 @@ export const PAGE_SIZE = 12;
 
 /** Kookee's slug format. Anything else is a 404 without a request, which stops bot probes. */
 const SLUG_PATTERN = /^[a-z0-9-]+$/;
+/** An incident id is a UUID; anything else is a 404 without a request. */
+const INCIDENT_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export const SITE_TYPES = ['blog', 'changelog', 'help_article', 'page'] as const;
 export type SiteType = (typeof SITE_TYPES)[number];
@@ -116,6 +118,23 @@ export async function getRoadmap() {
   ]);
   // Only open posts are read, so closed columns (Done, Declined) would render empty.
   return { columns: columns.filter((column) => column.type === 'open'), posts: posts.data };
+}
+
+export async function getStatus() {
+  'use cache';
+  cacheLife('kookee-status');
+  cacheTag('kookee:status');
+  const kookee = getKookee();
+  return kookee ? orNull(kookee.status.get()) : null;
+}
+
+export async function getStatusIncident(id: string) {
+  'use cache';
+  cacheLife('kookee-status');
+  cacheTag('kookee:status');
+  const kookee = getKookee();
+  if (!kookee || !INCIDENT_ID_PATTERN.test(id)) return null;
+  return orNull(kookee.status.getIncident(id));
 }
 
 /** Every published entry of the four types, in every locale; callers keep the default locale. */

@@ -5,7 +5,7 @@ type KookeeEvent = { type: string; data?: { type?: string } };
 
 const SITE_TYPES = new Set(['blog', 'changelog', 'help_article', 'page']);
 
-/** Refreshes the pages that show an entry as soon as Kookee reports a change to it. */
+/** Refreshes the pages that show an entry, or the status page, as soon as Kookee reports a change. */
 export async function POST(request: Request) {
   const secret = process.env.KOOKEE_WEBHOOK_SECRET;
   if (!secret) return new Response(null, { status: 404 });
@@ -16,6 +16,13 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof WebhookVerificationError) return new Response(null, { status: 401 });
     throw error;
+  }
+
+  // Incidents and monitors carry no entry type. A status page is read during an incident, so the
+  // next visit waits for the current one.
+  if (event.type.startsWith('incident.') || event.type.startsWith('monitor.')) {
+    revalidateTag('kookee:status', { expire: 0 });
+    return new Response(null, { status: 204 });
   }
 
   const entryType = event.data?.type;

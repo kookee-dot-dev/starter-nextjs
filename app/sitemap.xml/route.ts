@@ -1,7 +1,7 @@
 import { buildSitemap } from '@kookee/sdk';
 import { exportEntries, getHelpCategories, getProject } from '@/lib/kookee';
 import { getPath } from '@/lib/paths';
-import { ROADMAP_ENABLED, SITE_URL } from '@/lib/site';
+import { ROADMAP_ENABLED, SITE_URL, STATUS_ENABLED } from '@/lib/site';
 
 export async function GET() {
   const [project, rows, categories] = await Promise.all([getProject(), exportEntries(), getHelpCategories()]);
@@ -16,6 +16,7 @@ export async function GET() {
       '/changelog',
       '/help',
       ...(ROADMAP_ENABLED ? ['/roadmap'] : []),
+      ...(STATUS_ENABLED ? ['/status'] : []),
       ...categories.map((category) => `/help/${category.slug}`),
     ],
   });

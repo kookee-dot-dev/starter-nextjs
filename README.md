@@ -1,7 +1,8 @@
 # Kookee starter for Next.js
 
 A Next.js site for the content of a [Kookee](https://kookee.dev) project: a blog, a changelog, a
-help center with search, your pages and a read-only roadmap, plus the Kookee site widget. Pages
+help center with search, your pages, a read-only roadmap and, when you turn it on, your status
+page, plus the Kookee site widget. Pages
 are rendered on the server and cached, and a webhook refreshes them when you publish.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fkookee-dot-dev%2Fstarter-nextjs&env=KOOKEE_API_KEY&envDescription=A%20standard%20API%20key%20from%20your%20Kookee%20project%20(API%20keys%20%E2%86%92%20Create%20Key)&envLink=https%3A%2F%2Fkookee.dev%2Fhelp%2Fsdk-amp-integration%2Fstart-a-site-from-the-nextjs-starter&project-name=kookee-site&repository-name=kookee-site)
@@ -22,6 +23,7 @@ Built with Next.js 16 (App Router, Cache Components),
 | `/changelog`, `/changelog/page/2`, `/changelog/{slug}` | Changelog entries; an entry with reactions |
 | `/help`, `/help/{category}`, `/help/{category}/{slug}` | Help categories and search as you type; a category's articles; an article with its table of contents and the "Was this article helpful?" vote |
 | `/roadmap` | The open feedback posts by column, read-only. `KOOKEE_ROADMAP=false` hides it |
+| `/status`, `/status/incidents/{id}` | Your status page, as Kookee hosts it: incidents, maintenance, and each component's uptime over 90 days; an incident with its updates. Off until you set `KOOKEE_STATUS=true` |
 | `/{slug}` | Your pages, such as `/about` or `/privacy` |
 | `/sitemap.xml`, `/robots.txt`, `/llms.txt`, `/blog/rss.xml`, `/changelog/rss.xml` | Files for search engines, AI crawlers and feed readers |
 
@@ -64,6 +66,7 @@ asks for `KOOKEE_API_KEY`. Any host that runs Next.js works; set the same variab
 | `SITE_URL` | no | `https://` + Vercel's production domain, else `http://localhost:3000` | The site's address in canonical URLs, the sitemap, feeds and `llms.txt` |
 | `KOOKEE_REVALIDATE_SECONDS` | no | `21600` (6 hours) | How long a page is served before it is rebuilt in the background. Read at build time, so a change needs a redeploy |
 | `KOOKEE_ROADMAP` | no | `true` | `false` hides `/roadmap` and its header link |
+| `KOOKEE_STATUS` | no | `false` | `true` shows `/status` and a header link. Turn it on once the project has its status page set up |
 | `KOOKEE_WEBHOOK_SECRET` | no | | The signing secret of a Kookee webhook endpoint. Turns on `/api/kookee-webhook` |
 
 ## Allowed origins
@@ -114,6 +117,12 @@ from the next page served.
   tag, roadmap changes, a changed slug of an entry that another type links to, and the first save
   or a reset of the widget settings.
 
+The status page has a time window of its own: at most a minute, since it is read during an
+incident. Subscribe the same endpoint to `incident.created`, `incident.updated`, `monitor.down` and
+`monitor.up`, and the next visit after one of them gets the current status. A status you set by
+hand, an edited or deleted incident, and a maintenance window that starts or ends send no event,
+so they show within the minute.
+
 ## API usage
 
 Every request the site makes with its key counts against the monthly request quota of the project
@@ -124,7 +133,9 @@ owner's account, shared by all their projects:
 - in the browser: each help search, the widget's Help tab and article reader, and a reaction or
   helpful vote when clicked.
 
-The widget's settings and its AI chat are not API requests; each chat answer uses the account's AI
+Status page reads do not count against the monthly quota: they have a rate limit of their own,
+ten times the project's per-minute limit. The widget's settings and its AI chat are not API
+requests; each chat answer uses the account's AI
 answers. The Free plan has 100,000 requests a month and 50 AI answers, and a project takes at most
 300 requests a minute, shared by the server and the browsers.
 
@@ -145,7 +156,7 @@ change a route.
   [`@kookee/react` README](https://www.npmjs.com/package/@kookee/react).
 - **Languages:** the site reads your project's default language only, so every entry has one URL.
 - **Not shown:** help articles without a category (they have no URL here), a page whose slug is
-  `blog`, `changelog`, `help`, `roadmap` or `api`, and a blog post or changelog
+  `blog`, `changelog`, `help`, `roadmap`, `status` or `api` (even with the status page off), and a blog post or changelog
 entry whose slug is `page`, which the site's own routes would hide.
 
 ## Troubleshooting
