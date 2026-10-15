@@ -54,6 +54,17 @@ export async function listChangelog(page: number) {
   return (await getKookee()?.changelog.list({ page, limit: PAGE_SIZE })) ?? null;
 }
 
+/** The newest announcements in full, so the dialog opens one without a request from the browser. */
+export async function listAnnouncements() {
+  'use cache';
+  cacheLife('kookee');
+  cacheTag('kookee', 'kookee:announcement');
+  const kookee = getKookee();
+  if (!kookee) return [];
+  const { data } = await kookee.announcements.list({ limit: 10 });
+  return Promise.all(data.map((announcement) => kookee.announcements.getById(announcement.id)));
+}
+
 export async function getBlogPost(slug: string) {
   'use cache';
   cacheLife('kookee');

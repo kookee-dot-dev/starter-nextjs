@@ -25,14 +25,21 @@ Built with Next.js 16 (App Router, Cache Components),
 | `/roadmap` | The open feedback posts by column, read-only. `KOOKEE_ROADMAP=false` hides it |
 | `/status`, `/status/incidents/{id}` | Your status page, as Kookee hosts it: incidents, maintenance, and each component's uptime over 90 days; an incident with its updates. Off until you set `KOOKEE_STATUS=true` |
 | `/{slug}` | Your pages, such as `/about` or `/privacy` |
+| Every page | A pill under the header with your newest announcement; it opens the 10 newest in a dialog |
 | `/sitemap.xml`, `/robots.txt`, `/llms.txt`, `/blog/rss.xml`, `/changelog/rss.xml` | Files for search engines, AI crawlers and feed readers |
 
 The header carries a "What's new" badge with the latest changelog entries, and a link to your
-hosted portal when the project has it switched on. The site widget appears once you save its
-settings in the Kookee dashboard (**Site widget → Customize**) and the pages refresh: within
-`KOOKEE_REVALIDATE_SECONDS`, or right after a redeploy. **Reset to the plain chat** removes it the
-same way. Once it shows, it loads its tabs and texts in the browser, so later changes to them show
-within about a minute.
+hosted portal when the project has it switched on.
+
+Under the header, a pill shows the newest announcement the visitor has not dismissed, however old.
+It opens a dialog with the list, and each announcement opens there in full. A visitor can dismiss
+one from the pill or the list; the browser remembers it, so the pill moves on to the next one. To
+take an announcement down for everyone, unpublish it.
+
+The site widget appears once you save its settings in the Kookee dashboard (**Site widget →
+Customize**) and the pages refresh: within `KOOKEE_REVALIDATE_SECONDS`, or right after a redeploy.
+**Reset to the plain chat** removes it the same way. Once it shows, it loads its tabs and texts in
+the browser, so later changes to them show within about a minute.
 
 Every post, changelog entry, help article and page has its title, description, canonical URL, Open
 Graph tags and schema.org JSON-LD, taken from the entry and its SEO fields; the lists have a title
@@ -129,8 +136,9 @@ so they show on the next refresh.
 Every request the site makes with its key counts against the monthly request quota of the project
 owner's account, shared by all their projects:
 
-- the server's reads, each time a page is built or rebuilt (the layout's project, changelog and
-  page reads included);
+- the server's reads, each time a page is built or rebuilt (the layout's project, changelog, page
+  and announcement reads included; the announcements take one request for the list and one for
+  each of up to 10 announcements);
 - in the browser: each help search, the widget's Help tab and article reader, and a reaction or
   helpful vote when clicked.
 

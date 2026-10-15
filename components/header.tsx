@@ -1,10 +1,19 @@
 import Link from 'next/link';
-import type { ChangelogEntryListItem, PublicProject } from '@kookee/sdk';
+import type { AnnouncementDetail, ChangelogEntryListItem, PublicProject } from '@kookee/sdk';
 import { WhatsNew } from '@kookee/react/changelog/client';
+import { Announcements } from '@/components/announcements';
 import { hrefs } from '@/lib/paths';
 import { ROADMAP_ENABLED, STATUS_ENABLED } from '@/lib/site';
 
-export function Header({ project, changelog }: { project: PublicProject; changelog: ChangelogEntryListItem[] }) {
+export function Header({
+  project,
+  changelog,
+  announcements,
+}: {
+  project: PublicProject;
+  changelog: ChangelogEntryListItem[];
+  announcements: AnnouncementDetail[];
+}) {
   return (
     <header className="site-header">
       <div className="site-container site-header-inner">
@@ -21,6 +30,7 @@ export function Header({ project, changelog }: { project: PublicProject; changel
         </nav>
         <WhatsNew entries={changelog} href={hrefs.changelogEntry} allHref="/changelog" />
       </div>
+      <Announcements announcements={announcements} />
     </header>
   );
 }

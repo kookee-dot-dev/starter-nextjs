@@ -159,6 +159,106 @@ a {
   color: var(--site-text);
 }
 
+/* Announcements: the pill floats under the header, whatever its height, and opens the dialog. */
+
+.site-announcement-slot {
+  position: absolute;
+  inset-inline: 0;
+  top: calc(100% + 0.75rem);
+  display: flex;
+  justify-content: center;
+  padding-inline: 1rem;
+  pointer-events: none;
+}
+
+.site-announcement-slot .kookee-announcement-pill {
+  pointer-events: auto;
+}
+
+.site-announcements {
+  width: min(32rem, 100% - 2rem);
+  max-width: none;
+  max-height: min(36rem, 100dvh - 2rem);
+  padding: 0;
+  border: 1px solid var(--site-border);
+  border-radius: 12px;
+  background: var(--site-surface);
+  color: var(--site-text);
+  box-shadow: 0 16px 48px rgb(0 0 0 / 0.2);
+}
+
+.site-announcements[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.site-announcements:focus {
+  outline: none;
+}
+
+.site-announcements::backdrop {
+  background: rgb(15 17 21 / 0.5);
+}
+
+.site-announcements-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.625rem 0.625rem 0.625rem 1.25rem;
+  border-bottom: 1px solid var(--site-border);
+}
+
+.site-announcements-header h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.site-announcements-close,
+.site-announcements-back {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--site-text-muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.site-announcements-close {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.site-announcements-close:hover {
+  background: var(--site-surface-muted);
+  color: var(--site-text);
+}
+
+.site-announcements-back:hover {
+  color: var(--site-text);
+}
+
+.site-announcements-body {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0.5rem;
+}
+
+.site-announcements-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.5rem 0.75rem 0.75rem;
+}
+
+.site-announcements-back {
+  align-self: flex-start;
+  font-size: 0.875rem;
+}
+
 /* Footer */
 
 .site-footer {

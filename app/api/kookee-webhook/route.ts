@@ -3,7 +3,7 @@ import { Webhook, WebhookVerificationError } from 'standardwebhooks';
 
 type KookeeEvent = { type: string; data?: { type?: string } };
 
-const SITE_TYPES = new Set(['blog', 'changelog', 'help_article', 'page']);
+const SITE_TYPES = new Set(['blog', 'changelog', 'help_article', 'page', 'announcement']);
 
 /** Refreshes the pages that show an entry, or the status page, as soon as Kookee reports a change. */
 export async function POST(request: Request) {

@@ -6,7 +6,7 @@ import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { Setup } from '@/components/setup';
 import { SiteWidget } from '@/components/site-widget';
-import { getPublicApiKey, getProject, listChangelog, newestEntries } from '@/lib/kookee';
+import { getPublicApiKey, getProject, listAnnouncements, listChangelog, newestEntries } from '@/lib/kookee';
 import { SITE_URL } from '@/lib/site';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -27,7 +27,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: LayoutProps<'/'>) {
-  const [project, changelog, pages] = await Promise.all([getProject(), listChangelog(1), newestEntries('page', 20)]);
+  const [project, changelog, pages, announcements] = await Promise.all([
+    getProject(),
+    listChangelog(1),
+    newestEntries('page', 20),
+    listAnnouncements(),
+  ]);
   const apiKey = getPublicApiKey();
 
   return (
@@ -35,7 +40,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
       <body>
         {project && apiKey ? (
           <>
-            <Header project={project} changelog={changelog?.data ?? []} />
+            <Header project={project} changelog={changelog?.data ?? []} announcements={announcements} />
             <main className="site-main">{children}</main>
             <Footer project={project} pages={pages} />
             {project.widgetConfigured && <SiteWidget apiKey={apiKey} />}
