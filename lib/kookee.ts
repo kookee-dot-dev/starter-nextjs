@@ -117,6 +117,14 @@ export async function listHelpArticles(category: string) {
   return (await kookee.help.list({ category, limit: 100 })).data;
 }
 
+/** The FAQ items of a category, in the order the team set, each with its answer. */
+export async function listFaq(category: string) {
+  'use cache';
+  cacheLife('kookee');
+  cacheTag('kookee', 'kookee:faq');
+  return (await getKookee()?.faq.list({ category, limit: 50 }))?.data ?? [];
+}
+
 export async function getRoadmap() {
   'use cache';
   cacheLife('kookee');

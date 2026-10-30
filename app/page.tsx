@@ -1,17 +1,21 @@
 import Link from 'next/link';
+import { getFaqJsonLd } from '@kookee/sdk';
 import { BlogPostList } from '@kookee/react/blog';
 import { ChangelogList } from '@kookee/react/changelog';
+import { FaqList } from '@kookee/react/faq';
 import { HelpCategoryGrid } from '@kookee/react/help';
+import { JsonLd } from '@/components/json-ld';
 import { renderLink } from '@/components/link';
-import { getHelpCategories, getProject, listBlogPosts, listChangelog } from '@/lib/kookee';
+import { getHelpCategories, getProject, listBlogPosts, listChangelog, listFaq } from '@/lib/kookee';
 import { getPath, hrefs } from '@/lib/paths';
 
 export default async function HomePage() {
-  const [project, posts, changelog, categories] = await Promise.all([
+  const [project, posts, changelog, categories, faq] = await Promise.all([
     getProject(),
     listBlogPosts(1),
     listChangelog(1),
     getHelpCategories(),
+    listFaq('home'),
   ]);
   if (!project) return null;
 
@@ -42,15 +46,23 @@ export default async function HomePage() {
           <HelpCategoryGrid categories={categories} href={hrefs.helpCategory} renderLink={renderLink} />
         </section>
       )}
+
+      {faq.length > 0 && (
+        <section className="site-section">
+          <SectionHeading title="Frequently asked questions" />
+          <FaqList items={faq} />
+          <JsonLd data={getFaqJsonLd(faq)} />
+        </section>
+      )}
     </div>
   );
 }
 
-function SectionHeading({ title, href }: { title: string; href: string }) {
+function SectionHeading({ title, href }: { title: string; href?: string }) {
   return (
     <div className="site-section-heading">
       <h2>{title}</h2>
-      <Link href={href}>View all</Link>
+      {href && <Link href={href}>View all</Link>}
     </div>
   );
 }

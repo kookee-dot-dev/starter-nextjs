@@ -19,6 +19,7 @@ Built with Next.js 16 (App Router, Cache Components),
 | Path | What it shows |
 | --- | --- |
 | `/` | The newest posts and changelog entries, and the help categories |
+| `/`, below the help categories | Your FAQ: the FAQ items in the category `home`, in the order you set, with FAQPage JSON-LD. Hidden while the category has no items |
 | `/blog`, `/blog/page/2`, `/blog/{slug}` | Blog posts, 12 per page; a post with its table of contents and reactions |
 | `/changelog`, `/changelog/page/2`, `/changelog/{slug}` | Changelog entries; an entry with reactions |
 | `/help`, `/help/{category}`, `/help/{category}/{slug}` | Help categories and search as you type; a category's articles; an article with its table of contents and the "Was this article helpful?" vote |
@@ -108,14 +109,16 @@ To see changes as soon as you publish, add a webhook:
 
 1. In Kookee, open **Webhooks**, press **Add endpoint**, enter
    `https://<your-site>/api/kookee-webhook` and subscribe to the four `entry.*` events (published,
-   updated, unpublished, deleted). Copy the endpoint's signing secret (`whsec_…`).
+   updated, unpublished, deleted) and `config.updated`. Copy the endpoint's signing secret
+   (`whsec_…`).
 2. Set `KOOKEE_WEBHOOK_SECRET` to that secret in your host's environment and redeploy.
 3. In the endpoint's menu, press **Send test**. Kookee shows "Test event delivered".
 
 Until the secret is deployed the route answers 404, and with a wrong secret 401; Kookee counts
 both as failed deliveries. After a publish or an update, the next visit still gets the cached page
 and starts the refresh, and later visits see the change; an unpublished or deleted entry is gone
-from the next page served.
+from the next page served. Kookee sends `config.updated` when a config's value, key or on/off
+switch changes, since entries can show config values; it refreshes every page the same way.
 
 - The endpoint must be a public `https` address, so testing it locally needs a tunnel.
 - Only a project owner or admin can add webhooks. On the Free plan a project has 2 endpoints and

@@ -3,9 +3,9 @@ import { Webhook, WebhookVerificationError } from 'standardwebhooks';
 
 type KookeeEvent = { type: string; data?: { type?: string } };
 
-const SITE_TYPES = new Set(['blog', 'changelog', 'help_article', 'page', 'announcement']);
+const SITE_TYPES = new Set(['blog', 'changelog', 'help_article', 'page', 'announcement', 'faq']);
 
-/** Refreshes the pages that show an entry, or the status page, as soon as Kookee reports a change. */
+/** Refreshes the pages that show an entry or a config, or the status page, as soon as Kookee reports a change. */
 export async function POST(request: Request) {
   const secret = process.env.KOOKEE_WEBHOOK_SECRET;
   if (!secret) return new Response(null, { status: 404 });
@@ -22,6 +22,12 @@ export async function POST(request: Request) {
   // next visit waits for the current one.
   if (event.type.startsWith('incident.') || event.type.startsWith('monitor.')) {
     revalidateTag('kookee:status', { expire: 0 });
+    return new Response(null, { status: 204 });
+  }
+
+  // A config's value can show in any entry, so every Kookee page refreshes.
+  if (event.type === 'config.updated') {
+    revalidateTag('kookee', 'max');
     return new Response(null, { status: 204 });
   }
 
