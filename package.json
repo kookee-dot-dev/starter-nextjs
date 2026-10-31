@@ -10,9 +10,9 @@
     "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
-    "@kookee/react": "^1.21.0",
-    "@kookee/sdk": "^1.21.0",
-    "next": "^16.4.0",
+    "@kookee/react": "^1.22.1",
+    "@kookee/sdk": "^1.22.1",
+    "next": "^16.4.3",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "server-only": "^0.0.1",
