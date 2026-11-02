@@ -19,7 +19,7 @@ export function getKookee(): Kookee | null {
   return apiKey ? new Kookee({ apiKey, timeoutMs: 10_000, getPath }) : null;
 }
 
-/** The key the browser pieces (reactions, helpful vote, help search, widget) send. It is public by design. */
+/** The key the browser pieces (reactions, helpful vote, roadmap votes, help search, widget) send. It is public by design. */
 export function getPublicApiKey(): string | null {
   return process.env.KOOKEE_API_KEY || null;
 }
